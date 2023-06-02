@@ -72,7 +72,7 @@ app.post("/webhook",(req,res)=>{ //i want some
 
     }
     app.get("/",(req,res)=>{
-    res.status(200).send(JSON.stringify(body_param,null,2));
+    res.status(200).send("<h1>{JSON.stringify(body_param,null,2)}</h1>");
 });
 
 });

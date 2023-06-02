@@ -5,8 +5,8 @@ require('dotenv').config();
 
 const app=express().use(body_parser.json());
 
-const token=process.env.TOKEN;
-const mytoken=process.env.MYTOKEN;//prasath_token
+const token=process.env.WHATSAPP_TOKEN;
+const mytoken=process.env.VERIFY_TOKEN;//prasath_token
 
 app.listen(process.env.PORT,()=>{
     console.log("webhook is listening");

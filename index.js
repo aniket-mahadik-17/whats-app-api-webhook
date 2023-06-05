@@ -46,6 +46,12 @@ app.post("/webhook",(req,res)=>{ //i want some
     
     console.log("----------------------------------------Messages-----------------------------------------------------------");
     console.log(JSON.stringify(body_param,null,2));
+    
+   //socket.io connection
+  io.on("connection", (socket) => {
+    console.log("Connected & socket id is:", socket.id);
+    socket.emit("chatdata", JSON.stringify(body_param, null, 2));
+  });
 
     if(body_param.object){
         if(body_param.entry && 

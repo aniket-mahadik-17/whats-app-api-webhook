@@ -49,8 +49,7 @@ app.post("/webhook",(req,res)=>{ //i want some
     
    //socket.io connection
   io.on("connection", (socket) => {
-    console.log("Connected & socket id is:", socket.id);
-    socket.emit("originaldata", "Yaa Hoo,original data received!!!");
+    socket.emit("originaldata", `Done ${JSON.stringify(body_param,null,2)}`);
   });
 
     if(body_param.object){

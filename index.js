@@ -26,14 +26,6 @@ app.get("/webhook",(req,res)=>{
    let mode=req.query["hub.mode"];
    let challange=req.query["hub.challenge"];
    let token=req.query["hub.verify_token"];
-    
-    
-    //socket.io connection
-             io.on("connection", (socket) => {
-              socket.emit("getdata", res.data);
-                 console.log("*********************************");
-                 console.log(res.data);
-             });
 
     if(mode && token){
 
@@ -65,10 +57,14 @@ app.post("/webhook",(req,res)=>{ //i want some
                let from = body_param.entry[0].changes[0].value.messages[0].from; 
                let msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
                let userName = req.body.entry[0].changes[0].value.contacts[0].profile.name;
+               let timestamp= body_param.entry[0].changes[0].value.messages[0].timestamp;
             
             //socket.io connection
              io.on("connection", (socket) => {
               socket.emit("originaldata", JSON.stringify(body_param,null,2));
+             });
+            io.on("connection", (socket) => {
+              socket.emit("filtereddata", {phon_no_id,from,msg_body,userName,timestamp});
              });
 
                axios({

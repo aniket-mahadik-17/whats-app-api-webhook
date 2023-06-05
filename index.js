@@ -27,7 +27,13 @@ app.get("/webhook",(req,res)=>{
    let challange=req.query["hub.challenge"];
    let token=req.query["hub.verify_token"];
     
-    console.log("Hello from app.get('/webhook')");
+    
+    //socket.io connection
+             io.on("connection", (socket) => {
+              socket.emit("getdata", res.data);
+                 console.log("*********************************");
+                 console.log(res.data);
+             });
 
     if(mode && token){
 

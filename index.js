@@ -39,6 +39,8 @@ app.get("/webhook",(req,res)=>{
 
 });
 
+let finalArray = [];
+
 app.post("/webhook",(req,res)=>{ //i want some 
 
     let body_param=req.body;
@@ -46,7 +48,6 @@ app.post("/webhook",(req,res)=>{ //i want some
     console.log("----------------------------------------Messages-----------------------------------------------------------");
     console.log(JSON.stringify(body_param,null,2));
     
-    let finalArray = [];
     if(body_param.object){
         if(body_param.entry && 
             body_param.entry[0].changes && 

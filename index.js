@@ -18,7 +18,7 @@ io = require("socket.io")(server, { cors: { origin: "*" } });
 io.on("connection", (socket) => {
   console.log("Connected & socket id is:", socket.id);
 
-  socket.emit("chatdata", "dummy data of chatting------>");
+  socket.emit("dummydata", "dummy data of chatting------>");
 });
 
 //to verify the callback url from dashboard side - cloud api side
@@ -50,7 +50,7 @@ app.post("/webhook",(req,res)=>{ //i want some
    //socket.io connection
   io.on("connection", (socket) => {
     console.log("Connected & socket id is:", socket.id);
-    socket.emit("chatdata", JSON.stringify(body_param, null, 2));
+    socket.emit("originaldata", JSON.stringify(body_param, null, 2));
   });
 
     if(body_param.object){

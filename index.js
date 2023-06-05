@@ -48,10 +48,6 @@ app.post("/webhook",(req,res)=>{ //i want some
     console.log("----------------------------------------Messages-----------------------------------------------------------");
     console.log(JSON.stringify(body_param,null,2));
     
-   //socket.io connection
-  io.on("connection", (socket) => {
-    socket.emit("originaldata", JSON.stringify(body_param,null,2));
-  });
 
     if(body_param.object){
         if(body_param.entry && 
@@ -63,6 +59,11 @@ app.post("/webhook",(req,res)=>{ //i want some
                let from = body_param.entry[0].changes[0].value.messages[0].from; 
                let msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
                let userName = req.body.entry[0].changes[0].value.contacts[0].profile.name;
+            
+            //socket.io connection
+             io.on("connection", (socket) => {
+              socket.emit("originaldata", JSON.stringify(body_param,null,2));
+             });
 
                axios({
                    method:"POST",

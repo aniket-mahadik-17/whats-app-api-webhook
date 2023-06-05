@@ -2,6 +2,7 @@ const express=require("express");
 const body_parser=require("body-parser");
 const axios=require("axios");
 require('dotenv').config();
+const cors = require("cors");
 
 const app=express().use(body_parser.json());
 
@@ -10,6 +11,14 @@ const mytoken=process.env.VERIFY_TOKEN;//prasath_token
 
 app.listen(process.env.PORT,()=>{
     console.log("webhook is listening");
+});
+
+io = require("socket.io")(server, { cors: { origin: "*" } });
+
+io.on("connection", (socket) => {
+  console.log("Connected & socket id is:", socket.id);
+
+  socket.emit("chatdata", "dummy data of chatting------>");
 });
 
 //to verify the callback url from dashboard side - cloud api side

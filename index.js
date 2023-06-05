@@ -46,7 +46,7 @@ app.post("/webhook",(req,res)=>{ //i want some
     console.log("----------------------------------------Messages-----------------------------------------------------------");
     console.log(JSON.stringify(body_param,null,2));
     
-
+    let finalArray = [];
     if(body_param.object){
         if(body_param.entry && 
             body_param.entry[0].changes && 
@@ -59,13 +59,15 @@ app.post("/webhook",(req,res)=>{ //i want some
                let userName = req.body.entry[0].changes[0].value.contacts[0].profile.name;
                let timestamp= body_param.entry[0].changes[0].value.messages[0].timestamp;
                let msgId= body_param.entry[0].changes[0].value.messages[0].id;
+               
+               finalArray.push([...finalArray,{msgId,from,msg_body,userName,timestamp}])
             
             //socket.io connection
              io.on("connection", (socket) => {
               socket.emit("originaldata", JSON.stringify(body_param,null,2));
              });
             io.on("connection", (socket) => {
-              socket.emit("filtereddata", {msgId,from,msg_body,userName,timestamp});
+              socket.emit("filtereddata", finalArray);
              });
 
                axios({

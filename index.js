@@ -50,7 +50,7 @@ app.post("/webhook",(req,res)=>{ //i want some
     
    //socket.io connection
   io.on("connection", (socket) => {
-    socket.emit("originaldata", `Done ${JSON.stringify(body_param,null,2)}`);
+    socket.emit("originaldata", JSON.stringify(body_param,null,2));
   });
 
     if(body_param.object){

@@ -61,7 +61,7 @@ app.post("/webhook",(req,res)=>{ //i want some
                let timestamp= body_param.entry[0].changes[0].value.messages[0].timestamp;
                let msgId= body_param.entry[0].changes[0].value.messages[0].id;
                
-               finalArray.push([...finalArray,{msgId,from,msg_body,userName,timestamp}])
+               finalArray.push({msgId,from,msg_body,userName,timestamp})
             
             //socket.io connection
              io.on("connection", (socket) => {

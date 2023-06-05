@@ -64,9 +64,9 @@ app.post("/webhook",(req,res)=>{ //i want some
              io.on("connection", (socket) => {
               socket.emit("originaldata", JSON.stringify(body_param,null,2));
              });
-            io.on("connection", (socket) => {
+//             io.on("connection", (socket) => {
               socket.emit("filtereddata", {msgId,from,msg_body,userName,timestamp});
-             });
+//              });
 
                axios({
                    method:"POST",

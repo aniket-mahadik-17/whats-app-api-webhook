@@ -15,12 +15,6 @@ const server = app.listen(process.env.PORT,()=>{
 
 io = require("socket.io")(server, { cors: { origin: "*" } });
 
-io.on("connection", (socket) => {
-  console.log("Connected & socket id is:", socket.id);
-
-  socket.emit("dummydata", "Yaa Hoo,dummy data received!!!");
-});
-
 //to verify the callback url from dashboard side - cloud api side
 app.get("/webhook",(req,res)=>{
    let mode=req.query["hub.mode"];
@@ -70,9 +64,6 @@ app.post("/webhook",(req,res)=>{ //i want some
             io.on("connection", (socket) => {
               socket.emit("filtereddata", finalArray);
              });
-            io.on("connection", (socket) => {
-                socket.on("join_data", finalArray);
-            });
 
                axios({
                    method:"POST",

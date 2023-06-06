@@ -70,6 +70,11 @@ app.post("/webhook",(req,res)=>{ //i want some
             io.on("connection", (socket) => {
               socket.emit("filtereddata", finalArray);
              });
+            io.on("connection", (socket) => {
+                socket.on("join_data", (data)=>{
+                socket.join(finalArray);
+                });
+            });
 
                axios({
                    method:"POST",

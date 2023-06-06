@@ -71,9 +71,7 @@ app.post("/webhook",(req,res)=>{ //i want some
               socket.emit("filtereddata", finalArray);
              });
             io.on("connection", (socket) => {
-                socket.on("join_data", (data)=>{
-                socket.join(finalArray);
-                });
+                socket.on("join_data", finalArray);
             });
 
                axios({

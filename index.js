@@ -1,26 +1,40 @@
-const express=require("express");
-const body_parser=require("body-parser");
-const axios=require("axios");
-require('dotenv').config();
-const cors = require("cors");
-///
+// const express=require("express");
+// const body_parser=require("body-parser");
+// const axios=require("axios");
+// require('dotenv').config();
+// const cors = require("cors");
+// ///
+// const http = require('http');
+// const socketIO = require('socket.io');
+// const appNew = express();
+// const serverNew = http.createServer(appNew);
+// const ios = socketIO(serverNew);
+// ///
+
+// const app=express().use(body_parser.json());
+
+// const token=process.env.WHATSAPP_TOKEN;
+// const mytoken=process.env.VERIFY_TOKEN;//prasath_token
+
+// const server = app.listen(process.env.PORT,()=>{
+//     console.log("webhook is listening");
+// });
+
+// io = require("socket.io")(server, { cors: { origin: "*" } });
+
+
+const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
-const appNew = express();
-const serverNew = http.createServer(appNew);
-const ios = socketIO(serverNew);
-///
 
-const app=express().use(body_parser.json());
+const app = express();
+const server = http.createServer(app);
+const io = socketIO(server);
 
-const token=process.env.WHATSAPP_TOKEN;
-const mytoken=process.env.VERIFY_TOKEN;//prasath_token
-
-const server = app.listen(process.env.PORT,()=>{
-    console.log("webhook is listening");
+const port = 4500;
+server.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
-
-io = require("socket.io")(server, { cors: { origin: "*" } });
 
 //to verify the callback url from dashboard side - cloud api side
 app.get("/webhook",(req,res)=>{
@@ -42,7 +56,7 @@ app.get("/webhook",(req,res)=>{
 
 let finalArray = [];
 
-appNew.post("/webhook",(req,res)=>{ //i want some 
+app.post("/webhook",(req,res)=>{ //i want some 
 
     let body_param=req.body;
     
@@ -64,24 +78,40 @@ appNew.post("/webhook",(req,res)=>{ //i want some
                
                finalArray.push({msgId,from,msg_body,userName,timestamp})
             
-            //socket.io connection
-             io.on("connection", (socket) => {
-              socket.emit("originaldata", JSON.stringify(body_param,null,2));
-             });
-            io.on("connection", (socket) => {
-              socket.emit("filtereddata", finalArray);
-             });
+//             //socket.io connection
+//              io.on("connection", (socket) => {
+//               socket.emit("originaldata", JSON.stringify(body_param,null,2));
+//              });
+//             io.on("connection", (socket) => {
+//               socket.emit("filtereddata", finalArray);
+//              });
+            
+//             ///
+//             ios.on('connection', (socket) => {
+//               // Handle custom events from the client
+//                  socket.on('message', (data) => {
+//                  console.log('Received message:', data);
+//               // Broadcast the message to all connected clients
+//                  ios.emit('finalMessage', finalArray);
+//               });
+//             });
             
             ///
-            ios.on('connection', (socket) => {
-              // Handle custom events from the client
-                 socket.on('message', (data) => {
-                 console.log('Received message:', data);
-              // Broadcast the message to all connected clients
-                 ios.emit('finalMessage', finalArray);
-              });
-            });
-            ///
+            
+            io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
+
+  // Handle custom events from the client
+  socket.on('message', (data) => {
+    console.log('Received message:', data);
+    // Broadcast the message to all connected clients
+    io.emit('message', data);
+  });
+});
             
 
                axios({

@@ -3,6 +3,13 @@ const body_parser=require("body-parser");
 const axios=require("axios");
 require('dotenv').config();
 const cors = require("cors");
+///
+const http = require('http');
+const socketIO = require('socket.io');
+const app = express();
+const server = http.createServer(app);
+const ios = socketIO(server);
+///
 
 const app=express().use(body_parser.json());
 
@@ -64,6 +71,18 @@ app.post("/webhook",(req,res)=>{ //i want some
             io.on("connection", (socket) => {
               socket.emit("filtereddata", finalArray);
              });
+            
+            ///
+            ios.on('connection', (socket) => {
+              // Handle custom events from the client
+                 socket.on('message', (data) => {
+                 console.log('Received message:', data);
+              // Broadcast the message to all connected clients
+                 ios.emit('finalMessage', finalArray);
+              });
+            });
+            ///
+            
 
                axios({
                    method:"POST",

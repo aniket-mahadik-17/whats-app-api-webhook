@@ -4,7 +4,6 @@ const axios=require("axios");
 require('dotenv').config();
 const cors = require("cors");
 
-
 const app=express().use(body_parser.json());
 
 const token=process.env.WHATSAPP_TOKEN;
@@ -58,14 +57,13 @@ app.post("/webhook",(req,res)=>{ //i want some
                
                finalArray.push({msgId,from,msg_body,userName,timestamp})
             
-          //socket.io connection
+            //socket.io connection
              io.on("connection", (socket) => {
               socket.emit("originaldata", JSON.stringify(body_param,null,2));
              });
             io.on("connection", (socket) => {
               socket.emit("filtereddata", finalArray);
              });
-           
 
                axios({
                    method:"POST",

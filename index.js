@@ -7,8 +7,8 @@ const cors = require("cors");
 const http = require('http');
 const socketIO = require('socket.io');
 const appNew = express();
-const server = http.createServer(appNew);
-const ios = socketIO(server);
+const serverNew = http.createServer(appNew);
+const ios = socketIO(serverNew);
 ///
 
 const app=express().use(body_parser.json());

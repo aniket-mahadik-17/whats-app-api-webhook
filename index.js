@@ -88,11 +88,10 @@ app.post("/webhook", (req, res) => {
       io.on("connection", (socket) => {
         socket.emit("messagestatusdata", messagesStatus);
       });
-
-      res.sendStatus(200);
-    } else {
-      res.sendStatus(404);
     }
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(404);
   }
 });
 

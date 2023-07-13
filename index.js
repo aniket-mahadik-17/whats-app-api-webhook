@@ -72,16 +72,17 @@ app.post("/webhook", (req, res) => {
     }
     /////////////////////////////////////////////////////////
     if (
-      body_param.entry &&
+       body_param.entry &&
       body_param.entry[0].changes &&
-      body_param.entry[0].changes[0].statuses &&
-      body_param.entry[0].changes[0].statuses[0]
+      body_param.entry[0].changes[0].value.statuses &&
+      body_param.entry[0].changes[0].value.statuses[0]
     ) {
-      let id = body_param.entry[0].changes[0].statuses[0].id;
-      let status = body_param.entry[0].changes[0].statuses[0].status;
-      let timestamp = body_param.entry[0].changes[0].statuses[0].timestamp;
+     let id = body_param.entry[0].changes[0].value.statuses[0].id;
+      let status = body_param.entry[0].changes[0].value.statuses[0].status;
+      let timestamp =
+        body_param.entry[0].changes[0].value.statuses[0].timestamp;
       let recipient_id =
-        body_param.entry[0].changes[0].statuses[0].recipient_id;
+        body_param.entry[0].changes[0].value.statuses[0].recipient_id;
 
       messagesStatus.push({ id, status, timestamp, recipient_id, timestamp });
 

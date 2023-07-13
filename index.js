@@ -65,16 +65,10 @@ app.post("/webhook",(req,res)=>{ //i want some
             io.on("connection", (socket) => {
               socket.emit("filtereddata", finalArray);
              });
-
-               res.sendStatus(200);
-            }else{
-                res.sendStatus(404);
-            }
+            /////////////////////////////////////////////////////////
 
     }
-    //////////////////////////////////////////////////////////////////////////
-    if(body_param.object){
-        if(body_param.entry && 
+            if(body_param.entry && 
             body_param.entry[0].changes && 
             body_param.entry[0].changes[0].statuses &&
             body_param.entry[0].changes[0].statuses[0]   
@@ -84,18 +78,18 @@ app.post("/webhook",(req,res)=>{ //i want some
                let timestamp = body_param.entry[0].changes[0].statuses[0].timestamp;
                let recipient_id = body_param.entry[0].changes[0].statuses[0].recipient_id;
                
-               messagesStatus.push({id,status,timestamp,recipient_id,timestamp})
-            
-            //socket.io connection
-            io.on("connection", (socket) => {
+              messagesStatus.push({id,status,timestamp,recipient_id,timestamp})
+                
+              io.on("connection", (socket) => {
               socket.emit("messagestatusdata", messagesStatus);
-             });
+               });
+
+
                res.sendStatus(200);
             }else{
                 res.sendStatus(404);
             }
-
-    }
+    
 });
 
 app.get("/",(req,res)=>{

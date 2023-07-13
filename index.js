@@ -66,8 +66,6 @@ app.post("/webhook",(req,res)=>{ //i want some
               socket.emit("filtereddata", finalArray);
              });
             /////////////////////////////////////////////////////////
-
-    }
             if(body_param.entry && 
             body_param.entry[0].changes && 
             body_param.entry[0].changes[0].statuses &&
@@ -89,6 +87,8 @@ app.post("/webhook",(req,res)=>{ //i want some
             }else{
                 res.sendStatus(404);
             }
+
+    }
     
 });
 

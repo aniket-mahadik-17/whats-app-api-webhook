@@ -34,6 +34,7 @@ app.get("/webhook",(req,res)=>{
 });
 
 let finalArray = [];
+let messagesStatus=[];
 
 app.post("/webhook",(req,res)=>{ //i want some 
 
@@ -65,22 +66,30 @@ app.post("/webhook",(req,res)=>{ //i want some
               socket.emit("filtereddata", finalArray);
              });
 
-//                axios({
-//                    method:"POST",
-//                    url:"https://graph.facebook.com/v13.0/"+phon_no_id+"/messages?access_token="+token,
-//                    data:{
-//                        messaging_product:"whatsapp",
-//                        to:from,
-//                        text:{
-//                            body:`Hello ${userName}`
-//                        }
-//                    },
-//                    headers:{
-//                        "Content-Type":"application/json"
-//                    }
+               res.sendStatus(200);
+            }else{
+                res.sendStatus(404);
+            }
 
-//                });
-
+    }
+    //////////////////////////////////////////////////////////////////////////
+    if(body_param.object){
+        if(body_param.entry && 
+            body_param.entry[0].changes && 
+            body_param.entry[0].changes[0].statuses &&
+            body_param.entry[0].changes[0].statuses[0]   
+            ){
+               let id= body_param.entry[0].changes[0].statuses[0].id;
+               let status = body_param.entry[0].changes[0].statuses[0].status; 
+               let timestamp = body_param.entry[0].changes[0].statuses[0].timestamp;
+               let recipient_id = body_param.entry[0].changes[0].statuses[0].recipient_id;
+               
+               messagesStatus.push({id,status,timestamp,recipient_id,timestamp})
+            
+            //socket.io connection
+            io.on("connection", (socket) => {
+              socket.emit("messagestatusdata", messagesStatus);
+             });
                res.sendStatus(200);
             }else{
                 res.sendStatus(404);

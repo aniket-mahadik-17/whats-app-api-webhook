@@ -9,6 +9,9 @@ const app=express().use(body_parser.json());
 const token=process.env.WHATSAPP_TOKEN;
 const mytoken=process.env.VERIFY_TOKEN;//prasath_token
 
+// Add CORS middleware to the app
+app.use(cors());
+
 const server = app.listen(process.env.PORT,()=>{
     console.log("webhook is listening");
 });

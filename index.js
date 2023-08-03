@@ -92,3 +92,17 @@ app.post("/webhook",(req,res)=>{ //i want some
 app.get("/",(req,res)=>{
     res.status(200).send("hello this is webhook setup");
 });
+
+app.get("/getMedia",async (req,res)=>{
+    const getMediaUrlResponse=await axios.get(`https://graph.facebook.com/v17.0/${req.query.mediaId}`, {
+    headers: {
+      Authorization: `Bearer ${req.query.token}`,
+    },
+  });
+    const media = await axios.get(`${getMediaUrlResponse?.data.url}`, {
+    headers: {
+      Authorization: `Bearer ${req.query.token}`,
+    },
+  });
+    res.status(200).json({data:media.data});
+});

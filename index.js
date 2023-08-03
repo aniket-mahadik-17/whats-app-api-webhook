@@ -4,12 +4,12 @@ const axios=require("axios");
 require('dotenv').config();
 const cors = require("cors");
 
-const app=express().use(body_parser.json()).use(core());
+const app=express().use(body_parser.json());
 
 const token=process.env.WHATSAPP_TOKEN;
 const mytoken=process.env.VERIFY_TOKEN;//prasath_token
 
-const server = app.listen(process.env.PORT,()=>{
+const server = app.use(core()).listen(process.env.PORT,()=>{
     console.log("webhook is listening");
 });
 

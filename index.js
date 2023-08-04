@@ -114,5 +114,6 @@ app.get("/", (req, res) => {
       Authorization: `Bearer ${req.query.token}`,
     },
   });
-    res.status(200).json({data:media.data});
+    const returnedB64 = Buffer.from(media.data).toString('base64');
+    res.status(200).json({data:returnedB64});
 });

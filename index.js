@@ -18,6 +18,14 @@ const server = app.listen(process.env.PORT, () => {
 
 io = require("socket.io")(server, { cors: { origin: "*" } });
 
+// Socket.io connection event handlers
+io.on("connection", (socket) => {
+  socket.emit("originaldata", JSON.stringify(body_param, null, 2));
+  socket.emit("filtereddata", finalArray);
+  socket.emit("messagestatusdata", messagesStatus);
+  socket.emit("messagereplydata", messageReply);
+});
+
 //to verify the callback url from dashboard side - cloud api side
 app.get("/webhook", (req, res) => {
   let mode = req.query["hub.mode"];
@@ -88,12 +96,12 @@ app.post("/webhook", (req, res) => {
       finalArray.push({ msgId, from, msg_body, userName, timestamp });
 
       //socket.io connection
-      io.on("connection", (socket) => {
-        socket.emit("originaldata", JSON.stringify(body_param, null, 2));
-      });
-      io.on("connection", (socket) => {
-        socket.emit("filtereddata", finalArray);
-      });
+      //   io.on("connection", (socket) => {
+      //     socket.emit("originaldata", JSON.stringify(body_param, null, 2));
+      //   });
+      //   io.on("connection", (socket) => {
+      //     socket.emit("filtereddata", finalArray);
+      //   });
     }
     ////////////////////// Sent messages status ////////////////////////////////
     if (
@@ -111,9 +119,9 @@ app.post("/webhook", (req, res) => {
 
       messagesStatus.push({ id, status, timestamp, recipient_id, timestamp });
 
-      io.on("connection", (socket) => {
-        socket.emit("messagestatusdata", messagesStatus);
-      });
+      //   io.on("connection", (socket) => {
+      //     socket.emit("messagestatusdata", messagesStatus);
+      //   });
     }
 
     ////////////////////// particular message reply ////////////////////////////////
@@ -202,9 +210,9 @@ app.post("/webhook", (req, res) => {
         msg_body_details,
       });
 
-      io.on("connection", (socket) => {
-        socket.emit("messagereplydata", messageReply);
-      });
+      //   io.on("connection", (socket) => {
+      //     socket.emit("messagereplydata", messageReply);
+      //   });
     }
     res.sendStatus(200);
   } else {

@@ -37,6 +37,28 @@ let finalArray = [];
 let messagesStatus = [];
 let messageReply = [];
 
+const getReplyMessageType = (string) => {
+  switch (string) {
+    case "text":
+      return "message";
+
+    case "image":
+      return "image";
+
+    case "audio":
+      return "audio";
+
+    case "video":
+      return "video";
+
+    case "document":
+      return "application";
+
+    default:
+      return "message";
+  }
+};
+
 app.post("/webhook", (req, res) => {
   let body_param = req.body;
 
@@ -95,6 +117,56 @@ app.post("/webhook", (req, res) => {
     }
 
     ////////////////////// particular message reply ////////////////////////////////
+    const getReplyMsgBody = (contextType) => {
+      switch (contextType) {
+        case "text":
+          return body_param.entry[0].changes[0].value.messages[0].text.body;
+
+        case "image":
+          return body_param.entry[0].changes[0].value.messages[0].image.id;
+
+        case "audio":
+          return body_param.entry[0].changes[0].value.messages[0].audio.id;
+
+        case "video":
+          return body_param.entry[0].changes[0].value.messages[0].video.id;
+
+        case "document":
+          return body_param.entry[0].changes[0].value.messages[0].document.id;
+
+        case "sticker":
+          return body_param.entry[0].changes[0].value.messages[0].sticker.id;
+
+        default:
+          break;
+      }
+    };
+
+    const getReplyMsgBodyDetails = (contextType) => {
+      switch (contextType) {
+        case "text":
+          return body_param.entry[0].changes[0].value.messages[0].text;
+
+        case "image":
+          return body_param.entry[0].changes[0].value.messages[0].image;
+
+        case "audio":
+          return body_param.entry[0].changes[0].value.messages[0].audio;
+
+        case "video":
+          return body_param.entry[0].changes[0].value.messages[0].video;
+
+        case "document":
+          return body_param.entry[0].changes[0].value.messages[0].document;
+
+        case "sticker":
+          return body_param.entry[0].changes[0].value.messages[0].sticker;
+
+        default:
+          break;
+      }
+    };
+
     if (
       body_param.entry &&
       body_param.entry[0].changes &&
@@ -102,7 +174,7 @@ app.post("/webhook", (req, res) => {
       body_param.entry[0].changes[0].value.messages[0] &&
       body_param.entry[0].changes[0].value.messages[0].context
     ) {
-      let type = "incoming";
+      let replyMsgType = "incoming";
       let replyForId =
         body_param.entry[0].changes[0].value.messages[0].context.id;
       let recipientName =
@@ -110,10 +182,12 @@ app.post("/webhook", (req, res) => {
       let recipientNumber =
         body_param.entry[0].changes[0].value.contacts[0].wa_id;
       let msgId = body_param.entry[0].changes[0].value.messages[0].id;
-      let msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
       let timestamp =
         body_param.entry[0].changes[0].value.messages[0].timestamp;
-      let replyMsgType = body_param.entry[0].changes[0].value.messages[0].type;
+      let contextType = body_param.entry[0].changes[0].value.messages[0].type;
+      let type = getReplyMessageType(contextType);
+      let msg_body = getReplyMsgBody(contextType);
+      let msg_body_details = getReplyMsgBodyDetails(contextType);
 
       messageReply.push({
         type,
@@ -124,6 +198,7 @@ app.post("/webhook", (req, res) => {
         timestamp,
         msgId,
         replyMsgType,
+        msg_body_details,
       });
 
       io.on("connection", (socket) => {

@@ -37,28 +37,6 @@ let finalArray = [];
 let messagesStatus = [];
 let messageReply = [];
 
-const getReplyMessageType = (string) => {
-  switch (string) {
-    case "text":
-      return "message";
-
-    case "image":
-      return "image";
-
-    case "audio":
-      return "audio";
-
-    case "video":
-      return "video";
-
-    case "document":
-      return "application";
-
-    default:
-      return "message";
-  }
-};
-
 app.post("/webhook", (req, res) => {
   let body_param = req.body;
 
@@ -125,6 +103,28 @@ app.post("/webhook", (req, res) => {
       body_param.entry[0].changes[0].value.messages[0] &&
       body_param.entry[0].changes[0].value.messages[0].context
     ) {
+      const getReplyMessageType = (string) => {
+        switch (string) {
+          case "text":
+            return "message";
+
+          case "image":
+            return "image";
+
+          case "audio":
+            return "audio";
+
+          case "video":
+            return "video";
+
+          case "document":
+            return "application";
+
+          default:
+            return "message";
+        }
+      };
+
       const getReplyMsgBody = (contextType) => {
         switch (contextType) {
           case "text":

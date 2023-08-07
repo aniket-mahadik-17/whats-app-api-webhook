@@ -117,55 +117,6 @@ app.post("/webhook", (req, res) => {
     }
 
     ////////////////////// particular message reply ////////////////////////////////
-    const getReplyMsgBody = (contextType) => {
-      switch (contextType) {
-        case "text":
-          return body_param.entry[0].changes[0].value.messages[0].text.body;
-
-        case "image":
-          return body_param.entry[0].changes[0].value.messages[0].image.id;
-
-        case "audio":
-          return body_param.entry[0].changes[0].value.messages[0].audio.id;
-
-        case "video":
-          return body_param.entry[0].changes[0].value.messages[0].video.id;
-
-        case "document":
-          return body_param.entry[0].changes[0].value.messages[0].document.id;
-
-        case "sticker":
-          return body_param.entry[0].changes[0].value.messages[0].sticker.id;
-
-        default:
-          break;
-      }
-    };
-
-    const getReplyMsgBodyDetails = (contextType) => {
-      switch (contextType) {
-        case "text":
-          return body_param.entry[0].changes[0].value.messages[0].text;
-
-        case "image":
-          return body_param.entry[0].changes[0].value.messages[0].image;
-
-        case "audio":
-          return body_param.entry[0].changes[0].value.messages[0].audio;
-
-        case "video":
-          return body_param.entry[0].changes[0].value.messages[0].video;
-
-        case "document":
-          return body_param.entry[0].changes[0].value.messages[0].document;
-
-        case "sticker":
-          return body_param.entry[0].changes[0].value.messages[0].sticker;
-
-        default:
-          break;
-      }
-    };
 
     if (
       body_param.entry &&
@@ -174,6 +125,56 @@ app.post("/webhook", (req, res) => {
       body_param.entry[0].changes[0].value.messages[0] &&
       body_param.entry[0].changes[0].value.messages[0].context
     ) {
+      const getReplyMsgBody = (contextType) => {
+        switch (contextType) {
+          case "text":
+            return body_param.entry[0].changes[0].value.messages[0].text.body;
+
+          case "image":
+            return body_param.entry[0].changes[0].value.messages[0].image.id;
+
+          case "audio":
+            return body_param.entry[0].changes[0].value.messages[0].audio.id;
+
+          case "video":
+            return body_param.entry[0].changes[0].value.messages[0].video.id;
+
+          case "document":
+            return body_param.entry[0].changes[0].value.messages[0].document.id;
+
+          case "sticker":
+            return body_param.entry[0].changes[0].value.messages[0].sticker.id;
+
+          default:
+            break;
+        }
+      };
+
+      const getReplyMsgBodyDetails = (contextType) => {
+        switch (contextType) {
+          case "text":
+            return body_param.entry[0].changes[0].value.messages[0].text;
+
+          case "image":
+            return body_param.entry[0].changes[0].value.messages[0].image;
+
+          case "audio":
+            return body_param.entry[0].changes[0].value.messages[0].audio;
+
+          case "video":
+            return body_param.entry[0].changes[0].value.messages[0].video;
+
+          case "document":
+            return body_param.entry[0].changes[0].value.messages[0].document;
+
+          case "sticker":
+            return body_param.entry[0].changes[0].value.messages[0].sticker;
+
+          default:
+            break;
+        }
+      };
+
       let replyMsgType = "incoming";
       let replyForId =
         body_param.entry[0].changes[0].value.messages[0].context.id;
@@ -188,8 +189,6 @@ app.post("/webhook", (req, res) => {
       let type = getReplyMessageType(contextType);
       let msg_body = getReplyMsgBody(contextType);
       let msg_body_details = getReplyMsgBodyDetails(contextType);
-
-      console.log("debugging console:","type:",type,"msg_body:",msg_body, "msg_body_details:",msg_body_details)
 
       messageReply.push({
         type,

@@ -35,10 +35,9 @@ app.get("/webhook", (req, res) => {
 
 let finalArray = [];
 let messagesStatus = [];
+let messageReply = [];
 
 app.post("/webhook", (req, res) => {
-  //i want some
-
   let body_param = req.body;
 
   console.log(
@@ -46,6 +45,7 @@ app.post("/webhook", (req, res) => {
   );
   console.log(JSON.stringify(body_param, null, 2));
 
+  ////////////////////// overall incoming messages ////////////////////////////////
   if (body_param.object) {
     if (
       body_param.entry &&
@@ -73,14 +73,14 @@ app.post("/webhook", (req, res) => {
         socket.emit("filtereddata", finalArray);
       });
     }
-    /////////////////////////////////////////////////////////
+    ////////////////////// Sent messages status ////////////////////////////////
     if (
-       body_param.entry &&
+      body_param.entry &&
       body_param.entry[0].changes &&
       body_param.entry[0].changes[0].value.statuses &&
       body_param.entry[0].changes[0].value.statuses[0]
     ) {
-     let id = body_param.entry[0].changes[0].value.statuses[0].id;
+      let id = body_param.entry[0].changes[0].value.statuses[0].id;
       let status = body_param.entry[0].changes[0].value.statuses[0].status;
       let timestamp =
         body_param.entry[0].changes[0].value.statuses[0].timestamp;
@@ -93,6 +93,43 @@ app.post("/webhook", (req, res) => {
         socket.emit("messagestatusdata", messagesStatus);
       });
     }
+
+    ////////////////////// particular message reply ////////////////////////////////
+    if (
+      body_param.entry &&
+      body_param.entry[0].changes &&
+      body_param.entry[0].changes[0].value.messages &&
+      body_param.entry[0].changes[0].value.messages[0] &&
+      body_param.entry[0].changes[0].value.messages[0].context
+    ) {
+      let type = "incoming";
+      let replyForId =
+        body_param.entry[0].changes[0].value.messages[0].context.id;
+      let recipientName =
+        body_param.entry[0].changes[0].value.contacts[0].profile.name;
+      let recipientNumber =
+        body_param.entry[0].changes[0].value.contacts[0].wa_id;
+      let msgId = body_param.entry[0].changes[0].value.messages[0].id;
+      let msg_body = body_param.entry[0].changes[0].value.messages[0].text.body;
+      let timestamp =
+        body_param.entry[0].changes[0].value.messages[0].timestamp;
+      let replyMsgType = body_param.entry[0].changes[0].value.messages[0].type;
+
+      messageReply.push({
+        type,
+        replyForId,
+        recipientName,
+        recipientNumber,
+        msg_body,
+        timestamp,
+        msgId,
+        replyMsgType,
+      });
+
+      io.on("connection", (socket) => {
+        socket.emit("messagereplydata", messageReply);
+      });
+    }
     res.sendStatus(200);
   } else {
     res.sendStatus(404);
@@ -103,17 +140,20 @@ app.get("/", (req, res) => {
   res.status(200).send("hello this is webhook setup");
 });
 
-    app.get("/getMedia",async (req,res)=>{
-    const getMediaUrlResponse=await axios.get(`https://graph.facebook.com/v17.0/${req.query.mediaId}`, {
+app.get("/getMedia", async (req, res) => {
+  const getMediaUrlResponse = await axios.get(
+    `https://graph.facebook.com/v17.0/${req.query.mediaId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${req.query.token}`,
+      },
+    }
+  );
+  const media = await axios.get(`${getMediaUrlResponse?.data.url}`, {
     headers: {
       Authorization: `Bearer ${req.query.token}`,
     },
   });
-    const media = await axios.get(`${getMediaUrlResponse?.data.url}`, {
-    headers: {
-      Authorization: `Bearer ${req.query.token}`,
-    },
-  });
-    const returnedB64 = Buffer.from(media.data).toString('base64');
-    res.status(200).json({data:returnedB64});
+  const returnedB64 = Buffer.from(media.data).toString("base64");
+  res.status(200).json({ data: returnedB64 });
 });

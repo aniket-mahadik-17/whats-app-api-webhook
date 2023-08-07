@@ -189,6 +189,8 @@ app.post("/webhook", (req, res) => {
       let msg_body = getReplyMsgBody(contextType);
       let msg_body_details = getReplyMsgBodyDetails(contextType);
 
+      console.log("debugging console:","type:",type,"msg_body:",msg_body, "msg_body_details:",msg_body_details)
+
       messageReply.push({
         type,
         replyForId,
